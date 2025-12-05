@@ -24,6 +24,8 @@ DerivedData
 
 # Android/IntelliJ
 #
+android/app/google-services.json
+
 build/
 .idea
 .gradle
@@ -73,3 +75,10 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.production
+*.env
