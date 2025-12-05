@@ -1,34 +1,62 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, StatusBar, useColorScheme } from 'react-native';
+import { Text, Button, View } from 'react-native';
+import { register, login, logout, getCurrentUserData } from './src/services/firebase/auth';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { testFirebaseConnection } from './src/services/firebase/testConnection';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
 
-  useEffect(() => {
-    testFirebaseConnection();
-  }, []);
+function App(): React.JSX.Element {
+  const testRegister = async () => {
+    try {
+      await register({
+        email: 'usera@test.com',
+        password: 'password123',
+        firstName: 'John',
+        lastName: 'Doe',
+        phoneNumber: '+1234567890',
+        role: 'A',
+      });
+      console.log('✅ Registration successful!');
+    } catch (error) {
+      console.error('Registration failed:', error);
+    }
+  };
+
+  const testLogin = async () => {
+    try {
+      await login({
+        email: 'usera@test.com',
+        password: 'password123',
+      });
+      console.log('✅ Login successful!');
+      
+      // Get user data
+      const userData = await getCurrentUserData();
+      console.log('User data:', userData);
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
+
+  const testLogout = async () => {
+    try {
+      await logout();
+      console.log('✅ Logout successful!');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <View style={styles.container}>
-        <Text style={styles.text}>Hello, React Native is working!</Text>
+    <SafeAreaProvider style={{ flex: 1, justifyContent: 'center', padding: 20 }}>
+      <Text style={{ fontSize: 20, marginBottom: 20 }}>Firebase Auth Test</Text>
+      
+      <View style={{ gap: 10 }}>
+        <Button title="Test Register" onPress={testRegister} />
+        <Button title="Test Login" onPress={testLogin} />
+        <Button title="Test Logout" onPress={testLogout} />
       </View>
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 20,
-  },
-});
 
 export default App;
