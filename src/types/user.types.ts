@@ -1,49 +1,79 @@
-export type UserRole = 'A' | 'B';
+import { UserType } from './auth.types';
+import { Location } from './location.types';
+import { Notification } from './notification.types';
 
-export interface User extends UserData {
+export interface User {
   id: string;
-}
-
-export interface UserData {
-  email: string;
   firstName: string;
   lastName: string;
-  phoneNumber: string;
-  role: UserRole;
-  createdAt: any;
-  updatedAt: any;
+  email: string;
+  birthday: Date;
+  userType: UserType;
+  profileImage?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  location?: Location;
+  locationSharingEnabled?: boolean;
 }
 
-export interface UserBLocation {
-  userId: string;
-  latitude: number;
-  longitude: number;
-  accuracy: number;
-  timestamp: any;
-  updatedAt: any;
+export interface Parent extends User {
+  userType: UserType.PARENT;
+  linkedChildren: string[]; // Array of child IDs
 }
 
-export interface Connection {
+export interface Child extends User {
+  userType: UserType.CHILD;
+  linkedParents: string[]; // Array of parent IDs
+  currentLocation?: Location;
+  locationSharingEnabled: boolean;
+}
+
+export interface ChildProfile {
   id: string;
-  userAId: string;
-  userBId: string;
-  createdBy: string;
-  status: 'active' | 'pending' | 'removed';
-  createdAt: any;
-  updatedAt: any;
+  firstName: string;
+  lastName: string;
+  profileImage?: string;
+  position?: Location;
+  lastNotification?: Notification;
 }
 
-export interface Notification {
+export interface ParentProfile {
   id: string;
-  fromUserId: string;
-  toUserId: string;
-  type: 'shake_alert';
-  location: {
-    latitude: number;
-    longitude: number;
-  };
-  message: string;
-  read: boolean;
-  timestamp: any;
-  createdAt: any;
+  firstName: string;
+  lastName: string;
+  email: string;
+  profileImage?: string;
+}
+
+export interface InviteData {
+  email: string;
+  inviterType: UserType;
+  inviterId: string;
+  inviterName: string;
+}
+
+export interface Invitation {
+  id: string;
+  inviterId: string;
+  inviterName: string;
+  inviterType: UserType;
+  inviteeEmail: string;
+  status: InvitationStatus;
+  createdAt: Date;
+  expiresAt: Date;
+}
+
+export enum InvitationStatus {
+  PENDING = 'pending',
+  ACCEPTED = 'accepted',
+  REJECTED = 'rejected',
+  EXPIRED = 'expired',
+}
+
+export interface UpdateProfileData {
+  firstName?: string;
+  lastName?: string;
+  birthday?: Date;
+  profileImage?: string;
+  locationSharingEnabled?: boolean;
 }
